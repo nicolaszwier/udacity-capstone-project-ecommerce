@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 import logging
-from models import db, setup_db
+from models import db, setup_db, Product, Category, Roles, User, Cart
 # from models import db, setup_db
 # from auth import AuthError, requires_auth
 
@@ -13,9 +13,292 @@ setup_db(app)
 CORS(app)
 
 
-@app.route('/')
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type,Authorization,true')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+
+@app.route('/products')
 def fetch_products():
 
+    try:
+        query = Product.query.order_by(Product.price).all()
+        products = [product.format() for product in query]
+
+    except:
+
+        logging.exception("message")
+        if len(products) == 0:
+            abort(404)
+
+    finally:
+        return jsonify({
+            'success': True,
+            'products': products,
+            'total_products': len(Product.query.all())
+        })
+
+
+@app.route('/products/<int:product_id>')
+def fetch_product_detail(product_id):
+
+    query = Product.query.filter_by(id=product_id).first()
+
+    if query is None:
+        abort(404)
+
+    product = query.format()
+
     return jsonify({
-        'success': True
+        'success': True,
+        'product': product
     })
+
+
+@app.route('/product', methods=['POST'])
+def create_product():
+    body = request.get_json()
+
+    try:
+        product = Product(
+            reference=body.get('reference', None),
+            name=body.get('name', None),
+            category_id=body.get('category_id', None),
+            short_description=body.get('short_description', None),
+            long_description=body.get('long_description', None),
+            price=body.get('price', None),
+            tags=body.get('tags', None),
+            image_link=body.get('image_link', None),
+            active='Y'
+        )
+
+        product.insert()
+
+        return jsonify({
+            'success': True,
+            'created': product.id,
+        })
+
+    except:
+        logging.exception("message")
+        db.session.rollback()
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+@app.route('/product/<int:product_id>', methods=['PATCH'])
+def update_product(product_id):
+
+    body = request.get_json()
+
+    try:
+        product = Product.query.get(product_id)
+
+        if product is None:
+            abort(404)
+
+        product.reference = body.get('reference', None)
+        product.name = body.get('name', None)
+        product.category_id = body.get('category_id', None)
+        product.short_description = body.get('short_description', None)
+        product.long_description = body.get('long_description', None)
+        product.price = body.get('price', None)
+        product.tags = body.get('tags', None)
+        product.image_link = body.get('image_link', None)
+
+        product.update()
+
+        return jsonify({
+            'success': True,
+            'product': product.format(),
+        })
+
+    except:
+        db.session.rollback()
+        logging.exception("message")
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+@app.route('/product-inactivate/<int:product_id>', methods=['PATCH'])
+def inactivate_product(product_id):
+
+    try:
+        product = Product.query.get(product_id)
+
+        if product is None:
+            abort(404)
+
+        product.active = 'N'
+
+        product.update()
+
+        return jsonify({
+            'success': True,
+            'product': product.id,
+        })
+
+    except:
+        db.session.rollback()
+        logging.exception("message")
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+@app.route('/customers')
+def fetch_customers():
+
+    try:
+        query = User.query.order_by(User.id).all()
+        users = [user.format() for user in query]
+
+    except:
+
+        if len(users) == 0:
+            abort(404)
+
+    finally:
+        return jsonify({
+            'success': True,
+            'customers': users,
+            'total_customers': len(User.query.all())
+        })
+
+
+@app.route('/customers/<int:customer_id>')
+def fetch_customer_detail(customer_id):
+
+    query = User.query.filter_by(id=customer_id).first()
+
+    if query is None:
+        abort(404)
+
+    customer = query.format()
+
+    return jsonify({
+        'success': True,
+        'customer': customer
+    })
+
+
+@app.route('/customer', methods=['POST'])
+def create_customer():
+
+    body = request.get_json()
+
+    try:
+        user = User(
+            external_id=body.get('external_id', None),
+            first_name=body.get('first_name', None),
+            last_name=body.get('last_name', None),
+            email=body.get('email', None),
+            phone=body.get('phone', None),
+            adress=body.get('adress', None),
+            neighborhood=body.get('neighborhood', None),
+            city=body.get('city', None),
+            state=body.get('state', None),
+            country=body.get('country', None),
+            role_id=2,  # customer
+            active='Y'
+        )
+
+        user.insert()
+
+        return jsonify({
+            'success': True,
+            'created': user.id,
+        })
+
+    except:
+        logging.exception("message")
+        db.session.rollback()
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+@app.route('/customers/<int:customer_id>/manager', methods=['PATCH'])
+def set_manager(customer_id):
+
+    try:
+        user = User.query.get(customer_id)
+
+        if user is None:
+            abort(404)
+
+        user.role_id = 1
+
+        user.update()
+
+        return jsonify({
+            'success': True,
+            'customer': user.id,
+        })
+
+    except:
+        db.session.rollback()
+        logging.exception("message")
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+'''
+   Error handlers 
+'''
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "success": False,
+        "error": 404,
+        "message": "Not found"
+    }), 404
+
+
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({
+        "success": False,
+        "error": 400,
+        "message": str(error)
+    }), 400
+
+
+@app.errorhandler(401)
+def bad_request(error):
+    return jsonify({
+        "success": False,
+        "error": 401,
+        "message": str(error)
+    }), 401
+
+
+@app.errorhandler(403)
+def bad_request(error):
+    return jsonify({
+        "success": False,
+        "error": 403,
+        "message": str(error)
+    }), 401
+
+
+@app.errorhandler(422)
+def unprocessable(error):
+    return jsonify({
+        "success": False,
+        "error": 422,
+        "message": "Unprocessable"
+    }), 422
