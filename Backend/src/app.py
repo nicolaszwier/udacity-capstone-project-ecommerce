@@ -1,12 +1,10 @@
 import os
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, redirect, session
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
 import logging
 from models import db, setup_db, Product, Category, Roles, User, Cart
-# from models import db, setup_db
-# from auth import AuthError, requires_auth
 
 app = Flask(__name__)
 setup_db(app)
@@ -254,6 +252,96 @@ def set_manager(customer_id):
 
     finally:
         db.session.close()
+
+
+def calculate_cart_calue(cart):
+
+    return jsonify({
+        'total_price': total_price,
+        'discount': discount,
+        'final_price': final_price,
+    })
+
+
+'''
+@TODO implement get cart by customer id and calculate the total
+'''
+@app.route('/cart/<int:customer_id>')
+def fetch_cart(customer_id):
+
+    try:
+        query = Cart.query.filter_by(
+            customer_id=customer_id).order_by(Cart.id).all()
+        cart = [cart.format() for cart in query]
+
+    except:
+
+        if len(cart) == 0:
+            abort(404)
+
+    # totals = calculate_cart_calue(cart)
+
+    finally:
+        return jsonify({
+            'success': True,
+            'products': cart,
+            'totals': {
+                'discount': 10,
+                'total_price': 100,
+                'final_price': 90,
+                '#todo': ''
+            },
+            'total_products': len(cart)
+        })
+
+
+@app.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+
+    body = request.get_json()
+
+    try:
+        cart = Cart(
+            customer_id=body.get('customer_id', None),
+            product_id=body.get('product_id', None),
+            amount=body.get('amount', None),
+            product_price=body.get('product_price', None),
+        )
+
+        cart.insert()
+
+        return jsonify({
+            'success': True,
+            'created': cart.id,
+        })
+
+    except:
+        logging.exception("message")
+        db.session.rollback()
+        abort(422)
+
+    finally:
+        db.session.close()
+
+
+@app.route('/remove-from-cart/<int:cart_id>', methods=['DELETE'])
+def delete_drink(cart_id):
+    try:
+        cart = Cart.query.filter(Cart.id == cart_id).one_or_none()
+
+        if cart is None:
+            abort(404)
+
+        cart.delete()
+
+        return jsonify({
+            'success': True,
+            'delete': cart.id
+        })
+
+    except:
+        logging.exception("message")
+        abort(422)
 
 
 '''
