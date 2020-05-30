@@ -205,16 +205,12 @@ class Cart(db.Model):
         'product.id'), nullable=False)
     amount = db.Column(db.Integer)
     product_price = db.Column(Numeric)
-    discount = db.Column(Numeric)
-    total_price = db.Column(Numeric)
 
-    def __init__(self, customer_id, product_id, amount, product_price, discount, total_price):
+    def __init__(self, customer_id, product_id, amount, product_price):
         self.customer_id = customer_id
         self.product_id = product_id
         self.amount = amount
         self.product_price = product_price
-        self.discount = discount
-        self.total_price = total_price
 
     def insert(self):
         db.session.add(self)
@@ -233,7 +229,5 @@ class Cart(db.Model):
             'customer_id': self.customer_id,
             'product_id': self.product_id,
             'amount': self.amount,
-            'product_price': self.product_price,
-            'discount': self.discount,
-            'total_price': self.total_price,
+            'product_price': self.product_price
         }
