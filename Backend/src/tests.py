@@ -103,17 +103,32 @@ class EcommerceTestCase(unittest.TestCase):
         self.assertIn('422 Unprocessable Entity:', data['message'])
 
     def test_add_to_cart(self):
-        res = self.client().post('/product', json=self.new_cart)
+        res = self.client().post('/add-to-cart', json=self.new_cart)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-    # def test_add_to_cart_with_bad_data(self):
-    #     res = self.client().post('/add-to-cart', json=self.new_bad_cart)
-    #     data = json.loads(res.data)
-    #     self.assertEqual(res.status_code, 422)
-    #     self.assertEqual(data['success'], False)
-    #     self.assertIn('422 Unprocessable Entity:', data['message'])
+    def test_add_to_cart_with_bad_data(self):
+        res = self.client().post('/add-to-cart', json=self.new_bad_cart)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertIn('422 Unprocessable Entity:', data['message'])
+
+    def test_get_cart_by_customer_id(self):
+        res = self.client().get('/cart/1')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['products'])
+        self.assertTrue(data['total_products'])
+        self.assertTrue(data['totals'])
+
+    def test_check_cart_totals(self):
+        res = self.client().get('/cart/1')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['totals'][0]['final_price'], 10)
 
 
 # Make the tests conveniently executable
