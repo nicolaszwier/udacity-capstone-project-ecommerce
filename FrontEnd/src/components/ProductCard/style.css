@@ -1,0 +1,23 @@
+.product-card:hover .card-actions {
+    display: block;
+    opacity: 1;
+}
+
+.product-card {
+    min-height: 12rem;
+}
+
+.card-actions {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: opacity 0.5s ease-out;
+    /* background-color: var(--mdc-theme-primary); */
+    width: 100%;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
