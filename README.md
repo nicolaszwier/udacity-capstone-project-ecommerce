@@ -1,2 +1,22 @@
-# udacity-capstone-project-ecommerce
- This is the final project from Udacity Full-Stack Developer nanodegree. It's will be available soon.
+# Ecommerce Udacity Project
+ This is the final project from Udacity Full-Stack Developer nanodegree.
+ The project is a simple ecommerce  where you can see a list of all products os by category in the initial page.
+ It's possible to signin and add products to your cart, see the cart products, delete a product and "create a order" with the products you have selected. In the "create a order", I mean it's a fake order who won't be persist in the database.
+ 
+## Built With
+
+### Backend
+The backend was build using Flask, a lightweight for web application with python and SQLAlchemy to manage connections to the database.
+Check the API documentation here: [`./backend/`](./backend/README.md)
+
+### Frontend
+The frontend was build using React and Material Design components.
+Check the full documentation here: [`./frontend/`](./frontend/README.md)
+
+## Authors
+
+* **Nicolas Zwierzykowski** - [Nicolas](https://github.com/nicolaszwier)
+
+## License
+
+This project is licensed under the MIT License
