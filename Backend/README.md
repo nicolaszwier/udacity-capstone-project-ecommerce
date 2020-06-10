@@ -319,8 +319,8 @@ The API will return these error types when requests fail:
 ## Testing
 To run the tests, run
 ```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
+dropdb ecommerce_test
+createdb ecommerce_test
+psql ecommerce_test < ecommerce_test.psql
+python tests.py
 ```
