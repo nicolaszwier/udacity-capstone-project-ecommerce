@@ -6,9 +6,10 @@ import { TopAppBar, TopAppBarRow, TopAppBarFixedAdjust, TopAppBarTitle, TopAppBa
 import { Button } from '@rmwc/button';
 import { IconButton } from '@rmwc/icon-button';
 import { Typography } from '@rmwc/typography';
-import Skeleton from 'react-loading-skeleton';
+import { Tooltip } from '@rmwc/tooltip';
 
 
+import { AuthService } from "../../services/auth-service";
 import api from '../../services/api'
 import ProductsGrid from "../ProductsGrid/ProductsGrid";
 
@@ -19,6 +20,7 @@ import '@rmwc/button/styles';
 import '@rmwc/top-app-bar/styles';
 import '@rmwc/typography/styles';
 import '@rmwc/avatar/styles';
+import '@rmwc/tooltip/styles';
 import './style.css';
 
 class Home extends Component {
@@ -28,17 +30,61 @@ class Home extends Component {
             open: true,
             categories: [],
             totalCategories: 0,
+            user: {
+                picture: ''
+            },
+            isLoggedIn: false
         };
         this.topAppBarWidth = 'calc(100% - 255px)';
         this.loadingCategories = true;
+        this.authService = new AuthService();
     }
 
+
+    componentWillMount() {
+        this.checkIfIsLoggedIn();
+        this.handleUserInfo();
+    }
 
     componentDidMount() {
+        console.log('did');
         this.getCategories();
-        console.log(this.context);
+    }
+
+    checkIfIsLoggedIn = () => {
+        this.authService.load_jwts()
+        this.setState({
+            isLoggedIn: this.authService.activeJWT() ? true : false
+        })
+    }
+
+    doLogin = () => {
+        this.authService.login();
+    }
+
+    doLogout = () => {
+        this.authService.logout();
+        this.setState({
+            isLoggedIn: false
+        })
+    }
+
+    handleUserInfo = async () => {
+
+        await this.authService.fetchUserInfoFromAuth0()
+            .then(r => {
+                console.log('response.data', r.data);
+                this.setState({
+                    user: r.data
+                })
+            })
+            .catch((error) => {
+                console.log('error ' + error);
+            });;
+
 
     }
+
 
     handleDrawer = () => {
 
@@ -79,17 +125,23 @@ class Home extends Component {
 
                     <Drawer dismissible open={this.state.open} style={{ height: '100vh' }}>
                         <DrawerHeader className="drawer-header">
-                            <Avatar
-                                // src="images/avatars/ironman.png"
-                                style={{ marginTop: '15px', marginRight: '5px' }}
-                                size="xlarge"
-                                name="Tony Stark"
-                                interactive
-                            />
-                            <div>
-                                <DrawerTitle>Hello, Nicolas</DrawerTitle>
-                                <DrawerSubtitle>nicolas@email.com</DrawerSubtitle>
-                            </div>
+
+                            {this.state.isLoggedIn
+                                ? <>
+                                    <Avatar
+                                        src={this.state.user.picture}
+                                        style={{ marginTop: '15px', marginRight: '8px' }}
+                                        size="xlarge"
+                                        name={this.state.user.name}
+                                        interactive
+                                    />
+                                    <div>
+                                        <DrawerTitle>Hello, {this.state.user.given_name}</DrawerTitle>
+                                        <DrawerSubtitle>Enjoy this app! 😃</DrawerSubtitle>
+                                    </div>
+                                </>
+                                : <Button className="mdc-theme--secondary" onClick={() => this.doLogin()} label="Login" />
+                            }
                         </DrawerHeader>
                         <DrawerContent>
                             <List>
@@ -122,9 +174,22 @@ class Home extends Component {
                                         {/* <SearchBar></SearchBar> */}
                                     </TopAppBarSection>
                                     <TopAppBarSection alignEnd>
-                                        <Button className="mdc-theme--secondary" label="My orders" />
-                                        <IconButton className="mdc-theme--secondary"
-                                            icon="shopping_cart" label="Rate this!" />
+
+                                        {this.state.isLoggedIn
+                                            ? <>
+                                                <Button className="mdc-theme--secondary" label="My orders" />
+                                                <Tooltip content="Go to cart">
+                                                    <IconButton className="mdc-theme--secondary"
+                                                        icon="shopping_cart" label="Rate this!" />
+                                                </Tooltip>
+                                                <Tooltip content="Logout">
+                                                    <IconButton className="mdc-theme--secondary" onClick={() => this.doLogout()}
+                                                        icon="exit_to_app" label="Rate this!" />
+                                                </Tooltip>
+                                            </>
+                                            : <Button className="mdc-theme--secondary" onClick={() => this.doLogin()} label="Login" />
+                                        }
+
                                     </TopAppBarSection>
                                 </TopAppBarRow>
                             </TopAppBar>

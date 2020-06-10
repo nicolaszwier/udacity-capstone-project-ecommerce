@@ -21,7 +21,7 @@ class ProductCard extends Component {
         const { product } = this.props;
         return (
             <>
-                <Link to="/product" style={{ textDecoration: 'none' }}>
+                <Link to={{ pathname: `/product/${product.id}` }} style={{ textDecoration: 'none' }}>
                     <Card style={{}} className="product-card">
                         <CardPrimaryAction>
                             <CardMedia
@@ -31,9 +31,7 @@ class ProductCard extends Component {
                                     backgroundSize: 'contain'
                                 }}
                             />
-                            <div style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}>
-
-                            </div>
+                            <div style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }} />
                             <div style={{ padding: '0 1rem ' }} className="card-typography">
                                 <Typography
                                     use="headline6"
