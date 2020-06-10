@@ -7,11 +7,11 @@
 
 ### Backend
 The backend was build using Flask, a lightweight for web application with python and SQLAlchemy to manage connections to the database.
-Check the API documentation here: [`./backend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/README.md)
+Check the API documentation here: [`./backend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/)
 
 ### Frontend
 The frontend was build using React and Material Design components.
-Check the full documentation here: [`./frontend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/README.md)
+Check the full documentation here: [`./frontend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/)
 
 ## Authors
 
