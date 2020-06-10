@@ -12,7 +12,7 @@ Check the API documentation here: [`./backend/`](https://github.com/nicolaszwier
 The api is available in https://capstone-project-ecommerce.herokuapp.com/
 
 ### Frontend
-The frontend was build using React and Material Design components.
+The frontend was build using React, Material Design components and have integration with Auth0 for authentication and authorization.
 Check the full documentation here: [`./frontend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/)
 
 ## Authors
