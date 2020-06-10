@@ -1,0 +1,10 @@
+.grid-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+    /* background-color: aquamarine; */
+    max-height: 100%;
+    gap: 20px;
+    padding: 20px 0;
+
+    /* margin-bottom: 60px; */
+}

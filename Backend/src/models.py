@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from decimal import Decimal
 
 database_name = "ecommerce"
+# database_path = os.environ['DATABASE_URL']
 database_path = "postgres://{}:{}@{}/{}".format(
     'postgres', 'root', 'localhost:5432', database_name)
 
@@ -87,19 +88,37 @@ class Product(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def format(self):
-        return {
-            'id': self.id,
-            'reference': self.reference,
-            'name': self.name,
-            'category_id': self.category_id,
-            'short_description': self.short_description,
-            'long_description': self.long_description,
-            'price': Decimal(self.price),
-            'tags': self.tags,
-            'image_link': self.image_link,
-            'active': self.active,
-        }
+    def format(product):
+        formated_product = []
+        for el in product:
+            formated_product.append({
+                'id': el.id,
+                'reference': el.reference,
+                'name': el.name,
+                'category_id': el.category_id,
+                'category_name': el.category_name,
+                'short_description': el.short_description,
+                'long_description': el.long_description,
+                'price': Decimal(el.price),
+                'tags': el.tags,
+                'image_link': el.image_link,
+                'active': el.active,
+            })
+        return formated_product
+
+    # def format(self):
+    #     return {
+    #         'id': self.id,
+    #         'reference': self.reference,
+    #         'name': self.name,
+    #         'category_id': self.category_id,
+    #         'short_description': self.short_description,
+    #         'long_description': self.long_description,
+    #         'price': Decimal(self.price),
+    #         'tags': self.tags,
+    #         'image_link': self.image_link,
+    #         'active': self.active,
+    #     }
 
 
 class Roles(db.Model):
@@ -150,7 +169,7 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey(
         'roles.id'), nullable=False)
     active = Column(String)
-    cart = db.relationship('Cart', backref='user', lazy=True)
+    # cart = db.relationship('Cart', backref='user', lazy=True)
 
     def __init__(self, external_id, first_name, last_name, email, phone, adress, neighborhood, active, city, state, country, role_id):
         self.external_id = external_id
@@ -199,8 +218,7 @@ class Cart(db.Model):
     __tablename__ = 'cart'
 
     id = Column(Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey(
-        'user.id'), nullable=False)
+    customer_id = db.Column(db.Integer, nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey(
         'product.id'), nullable=False)
     amount = db.Column(db.Integer)
@@ -223,11 +241,16 @@ class Cart(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def format(self):
-        return {
-            'id': self.id,
-            'customer_id': self.customer_id,
-            'product_id': self.product_id,
-            'amount': self.amount,
-            'product_price': self.product_price
-        }
+    def format(cart):
+        formated_cart = []
+        for el in cart:
+            formated_cart.append({
+                'amount': el.amount,
+                'customer_id': el.customer_id,
+                'id': el.id,
+                'product_id': el.product_id,
+                'product_name': el.product_name,
+                'short_description': el.short_description,
+                'product_price': el.product_price,
+            })
+        return formated_cart
