@@ -88,6 +88,29 @@ The API will return these error types when requests fail:
     }  
   ```
 
+## GET '/categories'
+- General:
+  - Returns a list of categories objects, success value, and total number of categories
+  - Sample: `http://127.0.0.1:5000/categories`
+  
+  
+  ```json
+  {
+  "categories": [
+    {
+      "id": 1, 
+      "name": "Books"
+    }, 
+    {
+      "id": 2, 
+      "name": "Computers"
+    }
+  ], 
+  "success": true, 
+  "total_categories": 2
+  }
+  ```  
+
 ## GET '/products'
 - General:
   - Returns a list of products objects, success value, and total number of products
