@@ -38,10 +38,10 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
-    if 'permissions' not in payload:
+    if 'https://nicolas.com/role' not in payload:
         abort(400, 'Permissions not included in JWT.')
 
-    if permission not in payload['permissions']:
+    if permission not in payload['https://nicolas.com/role']:
         abort(403, 'Permission not found.')
     return True
 
