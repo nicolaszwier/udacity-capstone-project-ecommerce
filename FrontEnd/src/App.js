@@ -17,7 +17,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{ background: '#00000010' }}>
         <Auth>
           <Router>
             <Switch>
