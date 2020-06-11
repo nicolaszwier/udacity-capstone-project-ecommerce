@@ -9,12 +9,14 @@ import { Card, CardPrimaryAction, CardMedia } from '@rmwc/card';
 import { TextField } from '@rmwc/textfield';
 import { ChipSet, Chip } from '@rmwc/chip';
 import { Snackbar } from '@rmwc/snackbar';
+import { Tooltip } from '@rmwc/tooltip';
 
 
 import api from '../../services/api'
 
 // styles
 import '@rmwc/card/styles';
+import '@rmwc/tooltip/styles';
 import '@rmwc/textfield/styles';
 import '@rmwc/list/styles';
 import '@rmwc/button/styles';
@@ -58,16 +60,20 @@ class ProductDetail extends Component {
     getProduct = (product_id) => {
         api.get(`/products/${product_id}`)
             .then(r => {
-                console.log(r.data.product);
                 this.setState({
-                    product: r.data.product
+                    product: r.data.product[0]
                 })
-
-
-
             }).catch(e => {
                 console.log(e);
             })
+    }
+
+    getCustomerId = () => {
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            return user.id;
+        }
+        return false;
     }
 
 
@@ -76,7 +82,7 @@ class ProductDetail extends Component {
 
         this.newCart = {
             product_id: this.state.product.id,
-            customer_id: 1,
+            customer_id: this.getCustomerId(),
             amount: 1,
             product_price: this.state.product.price
         }
@@ -111,16 +117,18 @@ class ProductDetail extends Component {
                                 </Link>
 
                                 <TopAppBarTitle className="mdc-theme--text-primary-on-background">
-                                    {/* {this.state.product.name} */}
                                     Back to home
                                 </TopAppBarTitle>
                             </TopAppBarSection>
                             <TopAppBarSection >
                             </TopAppBarSection>
                             <TopAppBarSection alignEnd>
-                                <Button className="mdc-theme--secondary" label="My orders" />
-                                <IconButton className="mdc-theme--secondary"
-                                    icon="shopping_cart" label="Rate this!" />
+                                <Tooltip content="Go to cart">
+                                    <Link to={{ pathname: `/cart` }} style={{ textDecoration: 'none' }}>
+                                        <IconButton className="mdc-theme--secondary"
+                                            icon="shopping_cart" label="Rate this!" />
+                                    </Link>
+                                </Tooltip>
                             </TopAppBarSection>
                         </TopAppBarRow>
                     </TopAppBar>
@@ -162,7 +170,7 @@ class ProductDetail extends Component {
                                     </Typography>
 
                                     <div style={{ display: 'flex', margin: '20px 0' }}>
-                                        <TextField style={{ width: '100px' }} outlined label="Amount" value="1" />
+                                        <TextField style={{ width: '100px' }} outlined label="Amount" value="1" onChange={() => { }} />
                                         <Button onClick={() => { this.addtoCart() }} icon="add_shopping_cart" style={{ flexGrow: 1, marginLeft: '10px', height: '56px', maxWidth: '300px' }} label="Add to cart" unelevated />
                                     </div>
 
@@ -189,7 +197,9 @@ class ProductDetail extends Component {
                 <Snackbar
                     open={this.state.snackbar.open}
                     onClose={() => this.setState({
-                        snackbarOpened: false
+                        snackbar: {
+                            open: false
+                        }
                     })}
                     message={this.state.snackbar.message}
                     dismissesOnAction

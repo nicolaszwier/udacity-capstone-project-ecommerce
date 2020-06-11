@@ -5,38 +5,30 @@ import {
   Switch
 } from 'react-router-dom'
   ;
+import Auth from "./components/Auth/Auth";
 import Home from './components/Home/Home';
+import Cart from './components/Cart/Cart';
 import ProductDetail from './components/ProductDetail/ProductDetail';
-import { AuthService } from "./services/auth-service";
+import Callback from './components/Callback/Callback';
 import './theme.css';
-
-var auth = new AuthService();
-// const loginUrl = auth.build_login_link();
-// console.log(loginUrl);
-
 
 class App extends Component {
 
-  componentDidMount() {
-    auth.load_jwts();
-    auth.check_token_fragment();
-  }
 
   render() {
     return (
       <div className="App">
-        {/* <Header path /> */}
-        <Router>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/product/:product_id" component={ProductDetail} />
-
-            {/* <Route path='/login' component={() => {
-              window.location.href = `${loginUrl}`;
-              return null; */}
+        <Auth>
+          <Router>
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/product/:product_id" component={ProductDetail} />
+              <Route path="/callback" component={Callback} />
+              <Route path="/cart" component={Cart} />
             }} />
           </Switch>
-        </Router>
+          </Router>
+        </Auth>
       </div>
     );
 

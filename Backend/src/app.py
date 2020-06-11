@@ -4,11 +4,11 @@ from sqlalchemy import exc, func
 import json
 from flask_cors import CORS
 import logging
-from models import db, setup_db, Product, Category, Roles, User, Cart
+from models import db, setup_db, Product, Category, Cart
 from decimal import Decimal
 from validator import validate_required_fields_in_new_product, validate_required_fields_in_new_cart
 # from models import db, setup_db
-# from auth import AuthError, requires_auth
+from auth.auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -19,11 +19,11 @@ def create_app(test_config=None):
     logging.basicConfig(level=logging.DEBUG)
     @app.after_request
     def after_request(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
+        # response.headers.add('Access-Control-Allow-Origin', '*')
         response.headers.add('Access-Control-Allow-Headers',
                              'Content-Type,Authorization,true')
         response.headers.add('Access-Control-Allow-Methods',
-                             'GET,PUT,POST,DELETE,OPTIONS')
+                             'GET,PUT, PATCH, POST,DELETE,OPTIONS')
         return response
 
     @app.route('/status')
@@ -31,6 +31,21 @@ def create_app(test_config=None):
         return jsonify({
             'success': True,
             'status': 'The ecommerce API is working properly'
+        })
+
+    @app.route('/categories')
+    def fetch_categories():
+
+        query = Category.query.order_by(Category.name).all()
+        categories = [category.format() for category in query]
+
+        if len(categories) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'categories': categories,
+            'total_categories': len(Category.query.all())
         })
 
     PRODUCTS_PER_PAGE = 20
@@ -115,7 +130,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/product', methods=['POST'])
-    def create_product():
+    @requires_auth('post:products')
+    def create_product(jwt):
         body = request.get_json()
         try:
             validate_required_fields_in_new_product(body)
@@ -146,7 +162,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/product/<int:product_id>', methods=['PATCH'])
-    def update_product(product_id):
+    @requires_auth('patch:product')
+    def update_product(jwt, product_id):
 
         body = request.get_json()
 
@@ -169,7 +186,7 @@ def create_app(test_config=None):
 
             return jsonify({
                 'success': True,
-                'product': product.format(),
+                'updated': product.id,
             })
 
         except:
@@ -181,7 +198,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/product-inactivate/<int:product_id>', methods=['PATCH'])
-    def inactivate_product(product_id):
+    @requires_auth('patch:product-inactivate')
+    def inactivate_product(jwt, product_id):
 
         try:
             product = Product.query.get(product_id)
@@ -206,104 +224,9 @@ def create_app(test_config=None):
         finally:
             db.session.close()
 
-    @app.route('/customers')
-    def fetch_customers():
-
-        try:
-            query = User.query.order_by(User.id).all()
-            users = [user.format() for user in query]
-
-        except:
-
-            if len(users) == 0:
-                abort(404)
-
-        finally:
-            return jsonify({
-                'success': True,
-                'customers': users,
-                'total_customers': len(User.query.all())
-            })
-
-    @app.route('/customers/<int:customer_id>')
-    def fetch_customer_detail(customer_id):
-
-        query = User.query.filter_by(id=customer_id).first()
-
-        if query is None:
-            abort(404)
-
-        customer = query.format()
-
-        return jsonify({
-            'success': True,
-            'customer': customer
-        })
-
-    @app.route('/customer', methods=['POST'])
-    def create_customer():
-
-        body = request.get_json()
-
-        try:
-            user = User(
-                external_id=body.get('external_id', None),
-                first_name=body.get('first_name', None),
-                last_name=body.get('last_name', None),
-                email=body.get('email', None),
-                phone=body.get('phone', None),
-                adress=body.get('adress', None),
-                neighborhood=body.get('neighborhood', None),
-                city=body.get('city', None),
-                state=body.get('state', None),
-                country=body.get('country', None),
-                role_id=2,  # customer
-                active='Y'
-            )
-
-            user.insert()
-
-            return jsonify({
-                'success': True,
-                'created': user.id,
-            })
-
-        except:
-            logging.exception("message")
-            db.session.rollback()
-            abort(422)
-
-        finally:
-            db.session.close()
-
-    @app.route('/customers/<int:customer_id>/manager', methods=['PATCH'])
-    def set_manager(customer_id):
-
-        try:
-            user = User.query.get(customer_id)
-            if user is None:
-                abort(404)
-            user.role_id = 1
-            user.update()
-
-            return jsonify({
-                'success': True,
-                'customer': user.id,
-            })
-
-        except:
-            db.session.rollback()
-            logging.exception("message")
-            abort(422)
-
-        finally:
-            db.session.close()
-
-    '''
-    @TODO implement get cart by customer id and calculate the total
-    '''
-    @app.route('/cart/<int:customer_id>')
-    def fetch_cart(customer_id):
+    @app.route('/cart/<string:customer_id>')
+    @requires_auth('get:cart')
+    def fetch_cart(jwt, customer_id):
 
         totals = []
         cart = []
@@ -317,6 +240,7 @@ def create_app(test_config=None):
             Cart.product_id,
             Product.name.label("product_name"),
             Product.short_description,
+            Product.image_link,
             Cart.product_price
         ).filter(
             Cart.customer_id == customer_id
@@ -349,7 +273,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/add-to-cart', methods=['POST'])
-    def add_to_cart():
+    @requires_auth('post:cart')
+    def add_to_cart(jwt):
 
         body = request.get_json()
         try:
@@ -377,7 +302,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/remove-from-cart/<int:cart_id>', methods=['DELETE'])
-    def delete_drink(cart_id):
+    @requires_auth('delete:cart')
+    def remove_from_cart(jwt, cart_id):
         try:
             cart = Cart.query.filter(Cart.id == cart_id).one_or_none()
 
@@ -391,7 +317,7 @@ def create_app(test_config=None):
                 'delete': cart.id
             })
 
-        except:
+        except ValueError:
             logging.exception("message")
             abort(422)
 
