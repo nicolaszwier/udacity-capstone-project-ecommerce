@@ -8,7 +8,7 @@ from models import db, setup_db, Product, Category, Cart
 from decimal import Decimal
 from validator import validate_required_fields_in_new_product, validate_required_fields_in_new_cart
 # from models import db, setup_db
-# from auth import AuthError, requires_auth
+from auth.auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -19,11 +19,11 @@ def create_app(test_config=None):
     logging.basicConfig(level=logging.DEBUG)
     @app.after_request
     def after_request(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
+        # response.headers.add('Access-Control-Allow-Origin', '*')
         response.headers.add('Access-Control-Allow-Headers',
                              'Content-Type,Authorization,true')
         response.headers.add('Access-Control-Allow-Methods',
-                             'GET,PUT,POST,DELETE,OPTIONS')
+                             'GET,PUT, PATCH, POST,DELETE,OPTIONS')
         return response
 
     @app.route('/status')
@@ -130,7 +130,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/product', methods=['POST'])
-    def create_product():
+    @requires_auth('post:products')
+    def create_product(jwt):
         body = request.get_json()
         try:
             validate_required_fields_in_new_product(body)
@@ -161,7 +162,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/product/<int:product_id>', methods=['PATCH'])
-    def update_product(product_id):
+    @requires_auth('patch:product')
+    def update_product(jwt, product_id):
 
         body = request.get_json()
 
@@ -184,7 +186,7 @@ def create_app(test_config=None):
 
             return jsonify({
                 'success': True,
-                'product': product.format(),
+                'updated': product.id,
             })
 
         except:
@@ -196,7 +198,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/product-inactivate/<int:product_id>', methods=['PATCH'])
-    def inactivate_product(product_id):
+    @requires_auth('patch:product-inactivate')
+    def inactivate_product(jwt, product_id):
 
         try:
             product = Product.query.get(product_id)
@@ -221,8 +224,9 @@ def create_app(test_config=None):
         finally:
             db.session.close()
 
-    @app.route('/cart/<int:customer_id>')
-    def fetch_cart(customer_id):
+    @app.route('/cart/<string:customer_id>')
+    @requires_auth('get:cart')
+    def fetch_cart(jwt, customer_id):
 
         totals = []
         cart = []
@@ -236,6 +240,7 @@ def create_app(test_config=None):
             Cart.product_id,
             Product.name.label("product_name"),
             Product.short_description,
+            Product.image_link,
             Cart.product_price
         ).filter(
             Cart.customer_id == customer_id
@@ -268,7 +273,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/add-to-cart', methods=['POST'])
-    def add_to_cart():
+    @requires_auth('post:cart')
+    def add_to_cart(jwt):
 
         body = request.get_json()
         try:
@@ -296,7 +302,8 @@ def create_app(test_config=None):
             db.session.close()
 
     @app.route('/remove-from-cart/<int:cart_id>', methods=['DELETE'])
-    def delete_drink(cart_id):
+    @requires_auth('delete:cart')
+    def remove_from_cart(jwt, cart_id):
         try:
             cart = Cart.query.filter(Cart.id == cart_id).one_or_none()
 
@@ -310,7 +317,7 @@ def create_app(test_config=None):
                 'delete': cart.id
             })
 
-        except:
+        except ValueError:
             logging.exception("message")
             abort(422)
 

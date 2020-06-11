@@ -145,5 +145,6 @@ class Cart(db.Model):
                 'product_name': el.product_name,
                 'short_description': el.short_description,
                 'product_price': el.product_price,
+                'image_link': el.image_link
             })
         return formated_cart

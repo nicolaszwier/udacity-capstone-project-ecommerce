@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'nicolasdev.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coffeeshop'
+API_AUDIENCE = 'pKTGHsIqczKBuFkuknWc6LkVyfaOG0hm'
 
 
 class AuthError(Exception):
@@ -69,14 +69,15 @@ def verify_decode_jwt(token):
                 rsa_key,
                 algorithms=ALGORITHMS,
                 audience=API_AUDIENCE,
-                issuer='https://' + AUTH0_DOMAIN + '/'
+                issuer='https://' + AUTH0_DOMAIN + '/',
+                options={"verify_at_hash": False}
             )
             return payload
         except jwt.ExpiredSignatureError:
             abort(401, 'Token expired.')
         except jwt.JWTClaimsError:
             abort(401, 'Incorrect claims. Please, check the audience and issuer.')
-        except Exception:
+        except ValueError:
             abort(401, 'Unable to parse authentication token.')
     raise
     abort(401, 'Unable to find the appropriate key.')
@@ -89,7 +90,7 @@ def requires_auth(permission=''):
             token = get_token_auth_header()
             try:
                 payload = verify_decode_jwt(token)
-            except:
+            except ValueError:
                 abort(401)
 
             check_permissions(permission, payload)
