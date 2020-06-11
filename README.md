@@ -15,6 +15,8 @@ The api is available in https://capstone-project-ecommerce.herokuapp.com/
 The frontend was build using React, Material Design components and have integration with Auth0 for authentication and authorization.
 Check the full documentation here: [`./frontend/`](https://github.com/nicolaszwier/udacity-capstone-project-ecommerce/tree/master/Backend/)
 
+The site is available in https://nicolas-ecommerce.netlify.app
+
 ## Authors
 
 * **Nicolas Zwierzykowski** - [Nicolas](https://github.com/nicolaszwier)
