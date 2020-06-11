@@ -4,7 +4,7 @@ from sqlalchemy import exc, func
 import json
 from flask_cors import CORS
 import logging
-from models import db, setup_db, Product, Category, Roles, User, Cart
+from models import db, setup_db, Product, Category, Cart
 from decimal import Decimal
 from validator import validate_required_fields_in_new_product, validate_required_fields_in_new_cart
 # from models import db, setup_db
@@ -31,6 +31,21 @@ def create_app(test_config=None):
         return jsonify({
             'success': True,
             'status': 'The ecommerce API is working properly'
+        })
+
+    @app.route('/categories')
+    def fetch_categories():
+
+        query = Category.query.order_by(Category.name).all()
+        categories = [category.format() for category in query]
+
+        if len(categories) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'categories': categories,
+            'total_categories': len(Category.query.all())
         })
 
     PRODUCTS_PER_PAGE = 20
@@ -206,102 +221,6 @@ def create_app(test_config=None):
         finally:
             db.session.close()
 
-    @app.route('/customers')
-    def fetch_customers():
-
-        try:
-            query = User.query.order_by(User.id).all()
-            users = [user.format() for user in query]
-
-        except:
-
-            if len(users) == 0:
-                abort(404)
-
-        finally:
-            return jsonify({
-                'success': True,
-                'customers': users,
-                'total_customers': len(User.query.all())
-            })
-
-    @app.route('/customers/<int:customer_id>')
-    def fetch_customer_detail(customer_id):
-
-        query = User.query.filter_by(id=customer_id).first()
-
-        if query is None:
-            abort(404)
-
-        customer = query.format()
-
-        return jsonify({
-            'success': True,
-            'customer': customer
-        })
-
-    @app.route('/customer', methods=['POST'])
-    def create_customer():
-
-        body = request.get_json()
-
-        try:
-            user = User(
-                external_id=body.get('external_id', None),
-                first_name=body.get('first_name', None),
-                last_name=body.get('last_name', None),
-                email=body.get('email', None),
-                phone=body.get('phone', None),
-                adress=body.get('adress', None),
-                neighborhood=body.get('neighborhood', None),
-                city=body.get('city', None),
-                state=body.get('state', None),
-                country=body.get('country', None),
-                role_id=2,  # customer
-                active='Y'
-            )
-
-            user.insert()
-
-            return jsonify({
-                'success': True,
-                'created': user.id,
-            })
-
-        except:
-            logging.exception("message")
-            db.session.rollback()
-            abort(422)
-
-        finally:
-            db.session.close()
-
-    @app.route('/customers/<int:customer_id>/manager', methods=['PATCH'])
-    def set_manager(customer_id):
-
-        try:
-            user = User.query.get(customer_id)
-            if user is None:
-                abort(404)
-            user.role_id = 1
-            user.update()
-
-            return jsonify({
-                'success': True,
-                'customer': user.id,
-            })
-
-        except:
-            db.session.rollback()
-            logging.exception("message")
-            abort(422)
-
-        finally:
-            db.session.close()
-
-    '''
-    @TODO implement get cart by customer id and calculate the total
-    '''
     @app.route('/cart/<int:customer_id>')
     def fetch_cart(customer_id):
 

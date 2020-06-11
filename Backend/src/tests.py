@@ -4,7 +4,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 
 from app import app
-from models import setup_db, Category, Product, Roles, Cart
+from models import setup_db, Category, Product, Cart
 
 
 class EcommerceTestCase(unittest.TestCase):

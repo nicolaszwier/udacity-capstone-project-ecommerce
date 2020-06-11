@@ -5,9 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from decimal import Decimal
 
 database_name = "ecommerce"
-# database_path = os.environ['DATABASE_URL']
-database_path = "postgres://{}:{}@{}/{}".format(
-    'postgres', 'root', 'localhost:5432', database_name)
+database_path = os.environ['DATABASE_URL']
+# database_path = "postgres://{}:{}@{}/{}".format(
+#     'postgres', 'root', 'localhost:5432', database_name)
 
 db = SQLAlchemy()
 
@@ -106,119 +106,12 @@ class Product(db.Model):
             })
         return formated_product
 
-    # def format(self):
-    #     return {
-    #         'id': self.id,
-    #         'reference': self.reference,
-    #         'name': self.name,
-    #         'category_id': self.category_id,
-    #         'short_description': self.short_description,
-    #         'long_description': self.long_description,
-    #         'price': Decimal(self.price),
-    #         'tags': self.tags,
-    #         'image_link': self.image_link,
-    #         'active': self.active,
-    #     }
-
-
-class Roles(db.Model):
-    __tablename__ = 'roles'
-
-    id = Column(Integer, primary_key=True)
-    role = db.Column(db.String)
-    permissions = db.Column(db.ARRAY(db.String))
-    user = db.relationship('User', backref='role', lazy=True)
-
-    def __init__(self, role, permissions):
-        self.role = role
-        self.permissions = permissions
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def format(self):
-        return {
-            'id': self.id,
-            'role': self.role,
-            'permissions': self.permissions,
-        }
-
-
-class User(db.Model):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    external_id = db.Column(db.String)
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    email = db.Column(db.String)
-    phone = db.Column(db.String)
-    adress = db.Column(db.String)
-    neighborhood = db.Column(db.String)
-    city = db.Column(db.String)
-    state = db.Column(db.String)
-    country = db.Column(db.String)
-    role_id = db.Column(db.Integer, db.ForeignKey(
-        'roles.id'), nullable=False)
-    active = Column(String)
-    # cart = db.relationship('Cart', backref='user', lazy=True)
-
-    def __init__(self, external_id, first_name, last_name, email, phone, adress, neighborhood, active, city, state, country, role_id):
-        self.external_id = external_id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.phone = phone
-        self.adress = adress
-        self.neighborhood = neighborhood
-        self.city = city
-        self.state = state
-        self.country = country
-        self.role_id = role_id
-        self.active = active
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def format(self):
-        return {
-            'id': self.id,
-            'external_id': self.external_id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'email': self.email,
-            'phone': self.phone,
-            'adress': self.adress,
-            'neighborhood': self.neighborhood,
-            'city': self.city,
-            'state': self.state,
-            'country': self.country,
-            'role_id': self.role_id,
-            'active': self.active,
-        }
-
 
 class Cart(db.Model):
     __tablename__ = 'cart'
 
     id = Column(Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, nullable=False)
+    customer_id = db.Column(db.String, nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey(
         'product.id'), nullable=False)
     amount = db.Column(db.Integer)
