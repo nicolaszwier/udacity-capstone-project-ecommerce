@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { Drawer, DrawerHeader, DrawerTitle, DrawerSubtitle, DrawerContent, DrawerAppContent } from '@rmwc/drawer';
+import { Drawer, DrawerHeader, DrawerContent, DrawerAppContent } from '@rmwc/drawer';
 import { List, ListItem } from '@rmwc/list';
-import { Avatar } from '@rmwc/avatar';
 import { TopAppBar, TopAppBarRow, TopAppBarFixedAdjust, TopAppBarTitle, TopAppBarSection } from '@rmwc/top-app-bar';
 import { Button } from '@rmwc/button';
 import { IconButton } from '@rmwc/icon-button';
 import { Typography } from '@rmwc/typography';
 import { Tooltip } from '@rmwc/tooltip';
 
-
-import { AuthService } from "../../services/auth-service";
+import { AuthConsumer } from "../../contexts/authContext";
 import api from '../../services/api'
 import ProductsGrid from "../ProductsGrid/ProductsGrid";
+import Login from "../Login/Login";
+import Logout from "../Logout/Logout";
+import DrawerUserView from "../DrawerUserView/DrawerUserView";
 
 // styles
 import '@rmwc/drawer/styles';
@@ -37,53 +38,45 @@ class Home extends Component {
         };
         this.topAppBarWidth = 'calc(100% - 255px)';
         this.loadingCategories = true;
-        this.authService = new AuthService();
-    }
-
-
-    componentWillMount() {
-        this.checkIfIsLoggedIn();
-        this.handleUserInfo();
     }
 
     componentDidMount() {
-        console.log('did');
         this.getCategories();
     }
 
-    checkIfIsLoggedIn = () => {
-        this.authService.load_jwts()
-        this.setState({
-            isLoggedIn: this.authService.activeJWT() ? true : false
-        })
-    }
+    // checkIfIsLoggedIn = () => {
+    //     this.authService.load_jwts()
+    //     this.setState({
+    //         isLoggedIn: this.authService.activeJWT() ? true : false
+    //     })
+    // }
 
-    doLogin = () => {
-        this.authService.login();
-    }
+    // doLogin = () => {
+    //     this.authService.login();
+    // }
 
-    doLogout = () => {
-        this.authService.logout();
-        this.setState({
-            isLoggedIn: false
-        })
-    }
+    // doLogout = () => {
+    //     this.authService.logout();
+    //     this.setState({
+    //         isLoggedIn: false
+    //     })
+    // }
 
-    handleUserInfo = async () => {
+    // handleUserInfo = async () => {
 
-        await this.authService.fetchUserInfoFromAuth0()
-            .then(r => {
-                console.log('response.data', r.data);
-                this.setState({
-                    user: r.data
-                })
-            })
-            .catch((error) => {
-                console.log('error ' + error);
-            });;
+    //     await this.authService.fetchUserInfoFromAuth0()
+    //         .then(r => {
+    //             console.log('response.data', r.data);
+    //             this.setState({
+    //                 user: r.data
+    //             })
+    //         })
+    //         .catch((error) => {
+    //             console.log('error ' + error);
+    //         });;
 
 
-    }
+    // }
 
 
     handleDrawer = () => {
@@ -126,22 +119,12 @@ class Home extends Component {
                     <Drawer dismissible open={this.state.open} style={{ height: '100vh' }}>
                         <DrawerHeader className="drawer-header">
 
-                            {this.state.isLoggedIn
-                                ? <>
-                                    <Avatar
-                                        src={this.state.user.picture}
-                                        style={{ marginTop: '15px', marginRight: '8px' }}
-                                        size="xlarge"
-                                        name={this.state.user.name}
-                                        interactive
-                                    />
-                                    <div>
-                                        <DrawerTitle>Hello, {this.state.user.given_name}</DrawerTitle>
-                                        <DrawerSubtitle>Enjoy this app! 😃</DrawerSubtitle>
-                                    </div>
-                                </>
-                                : <Button className="mdc-theme--secondary" onClick={() => this.doLogin()} label="Login" />
-                            }
+                            <AuthConsumer>
+                                {({ authenticated }) =>
+                                    authenticated ? (<DrawerUserView />) : (<Login />)
+                                }
+                            </AuthConsumer>
+
                         </DrawerHeader>
                         <DrawerContent>
                             <List>
@@ -175,7 +158,27 @@ class Home extends Component {
                                     </TopAppBarSection>
                                     <TopAppBarSection alignEnd>
 
-                                        {this.state.isLoggedIn
+                                        <AuthConsumer>
+                                            {({ authenticated }) =>
+                                                authenticated ? (
+
+                                                    <>
+                                                        <Tooltip content="Go to cart">
+                                                            <IconButton className="mdc-theme--secondary"
+                                                                icon="shopping_cart" label="Rate this!" />
+                                                        </Tooltip>
+                                                        <Logout />
+                                                    </>
+
+
+                                                ) : (
+                                                        <Login />
+                                                    )
+                                            }
+                                        </AuthConsumer>
+
+
+                                        {/* {this.state.isLoggedIn
                                             ? <>
                                                 <Button className="mdc-theme--secondary" label="My orders" />
                                                 <Tooltip content="Go to cart">
@@ -187,8 +190,8 @@ class Home extends Component {
                                                         icon="exit_to_app" label="Rate this!" />
                                                 </Tooltip>
                                             </>
-                                            : <Button className="mdc-theme--secondary" onClick={() => this.doLogin()} label="Login" />
-                                        }
+                                            : <Login />
+                                        } */}
 
                                     </TopAppBarSection>
                                 </TopAppBarRow>
