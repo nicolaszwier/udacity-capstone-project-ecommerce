@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Drawer, DrawerHeader, DrawerContent, DrawerAppContent } from '@rmwc/drawer';
 import { List, ListItem } from '@rmwc/list';
 import { TopAppBar, TopAppBarRow, TopAppBarFixedAdjust, TopAppBarTitle, TopAppBarSection } from '@rmwc/top-app-bar';
-import { Button } from '@rmwc/button';
 import { IconButton } from '@rmwc/icon-button';
 import { Typography } from '@rmwc/typography';
 import { Tooltip } from '@rmwc/tooltip';
@@ -10,6 +10,7 @@ import { Tooltip } from '@rmwc/tooltip';
 import { AuthConsumer } from "../../contexts/authContext";
 import api from '../../services/api'
 import ProductsGrid from "../ProductsGrid/ProductsGrid";
+import TopSellersProductsGrid from "../TopSellersProductsGrid/TopSellersProductsGrid";
 import Login from "../Login/Login";
 import Logout from "../Logout/Logout";
 import DrawerUserView from "../DrawerUserView/DrawerUserView";
@@ -17,7 +18,6 @@ import DrawerUserView from "../DrawerUserView/DrawerUserView";
 // styles
 import '@rmwc/drawer/styles';
 import '@rmwc/list/styles';
-import '@rmwc/button/styles';
 import '@rmwc/top-app-bar/styles';
 import '@rmwc/typography/styles';
 import '@rmwc/avatar/styles';
@@ -28,70 +28,61 @@ class Home extends Component {
     constructor() {
         super();
         this.state = {
-            open: true,
+            drawerOpen: true,
+            drawerModalOpen: false,
             categories: [],
             totalCategories: 0,
             user: {
                 picture: ''
             },
-            isLoggedIn: false
+            windowWidth: 0,
+            windowHeight: 0
         };
         this.topAppBarWidth = 'calc(100% - 255px)';
         this.loadingCategories = true;
+        this.updateDimensions = this.updateDimensions.bind(this);
+    }
+
+    updateDimensions() {
+        let windowWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+        let windowHeight = typeof window !== "undefined" ? window.innerHeight : 0;
+
+        this.setState({ windowWidth, windowHeight });
     }
 
     componentDidMount() {
         this.getCategories();
+        this.updateDimensions();
+        this.handleTopAppBarSize();
+        window.addEventListener("resize", this.updateDimensions);
     }
 
-    // checkIfIsLoggedIn = () => {
-    //     this.authService.load_jwts()
-    //     this.setState({
-    //         isLoggedIn: this.authService.activeJWT() ? true : false
-    //     })
-    // }
-
-    // doLogin = () => {
-    //     this.authService.login();
-    // }
-
-    // doLogout = () => {
-    //     this.authService.logout();
-    //     this.setState({
-    //         isLoggedIn: false
-    //     })
-    // }
-
-    // handleUserInfo = async () => {
-
-    //     await this.authService.fetchUserInfoFromAuth0()
-    //         .then(r => {
-    //             console.log('response.data', r.data);
-    //             this.setState({
-    //                 user: r.data
-    //             })
-    //         })
-    //         .catch((error) => {
-    //             console.log('error ' + error);
-    //         });;
-
-
-    // }
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions);
+    }
 
 
     handleDrawer = () => {
 
-        if (this.state.open) {
-            this.topAppBarWidth = '100%';
-        } else {
-            this.topAppBarWidth = 'calc(100% - 255px)';
-        }
+        this.handleTopAppBarSize()
 
         this.setState({
-            open: !this.state.open,
+            drawerOpen: !this.state.drawerOpen,
+            drawerModalOpen: !this.state.drawerModalOpen,
         })
 
+    }
 
+    handleTopAppBarSize() {
+        if (this.state.windowWidth > 660) {
+            if (this.state.drawerOpen) {
+                this.topAppBarWidth = '100%';
+            } else {
+                this.topAppBarWidth = 'calc(100% - 255px)';
+            }
+        } else {
+            this.topAppBarWidth = '100%';
+        }
     }
 
     getCategories = () => {
@@ -116,28 +107,59 @@ class Home extends Component {
             <>
                 <div style={{ overflow: 'hidden', position: 'relative' }}>
 
-                    <Drawer dismissible open={this.state.open} style={{ height: '100vh' }}>
-                        <DrawerHeader className="drawer-header">
 
-                            <AuthConsumer>
-                                {({ authenticated }) =>
-                                    authenticated ? (<DrawerUserView />) : (<Login />)
-                                }
-                            </AuthConsumer>
+                    {
+                        this.state.windowWidth > 660 ? (
+                            <Drawer dismissible open={this.state.drawerOpen} style={{ height: '100vh' }}>
+                                <DrawerHeader className="drawer-header">
 
-                        </DrawerHeader>
-                        <DrawerContent>
-                            <List>
+                                    <AuthConsumer>
+                                        {({ authenticated }) =>
+                                            authenticated ? (<DrawerUserView />) : (<Login />)
+                                        }
+                                    </AuthConsumer>
 
-                                <ListItem>All categories</ListItem>
+                                </DrawerHeader>
+                                <DrawerContent>
+                                    <List>
 
-                                {this.state.categories.map((el) => (
-                                    <ListItem key={el.id}>{el.name}</ListItem>
-                                ))}
-                            </List>
-                        </DrawerContent>
-                    </Drawer>
+                                        <ListItem>All categories</ListItem>
 
+                                        {this.state.categories.map((el) => (
+                                            <ListItem key={el.id}>{el.name}</ListItem>
+                                        ))}
+                                    </List>
+                                </DrawerContent>
+                            </Drawer>
+                        ) : (
+                                <Drawer modal open={this.state.drawerModalOpen} style={{ height: '100vh' }} onClose={evt => {
+                                    this.setState({
+                                        drawerModalOpen: false
+                                    })
+                                }}>
+                                    <DrawerHeader className="drawer-header">
+
+                                        <AuthConsumer>
+                                            {({ authenticated }) =>
+                                                authenticated ? (<DrawerUserView />) : (<Login />)
+                                            }
+                                        </AuthConsumer>
+
+                                    </DrawerHeader>
+                                    <DrawerContent>
+                                        <List>
+
+                                            <ListItem>All categories</ListItem>
+
+                                            {this.state.categories.map((el) => (
+                                                <ListItem key={el.id}>{el.name}</ListItem>
+                                            ))}
+                                        </List>
+                                    </DrawerContent>
+                                </Drawer>
+
+                            )
+                    }
 
                     <DrawerAppContent style={{ minHeight: '15rem', padding: '0rem', }}>
                         <>
@@ -164,8 +186,10 @@ class Home extends Component {
 
                                                     <>
                                                         <Tooltip content="Go to cart">
-                                                            <IconButton className="mdc-theme--secondary"
-                                                                icon="shopping_cart" label="Rate this!" />
+                                                            <Link to={{ pathname: `/cart` }} style={{ textDecoration: 'none' }}>
+                                                                <IconButton className="mdc-theme--secondary"
+                                                                    icon="shopping_cart" label="Rate this!" />
+                                                            </Link>
                                                         </Tooltip>
                                                         <Logout />
                                                     </>
@@ -176,22 +200,6 @@ class Home extends Component {
                                                     )
                                             }
                                         </AuthConsumer>
-
-
-                                        {/* {this.state.isLoggedIn
-                                            ? <>
-                                                <Button className="mdc-theme--secondary" label="My orders" />
-                                                <Tooltip content="Go to cart">
-                                                    <IconButton className="mdc-theme--secondary"
-                                                        icon="shopping_cart" label="Rate this!" />
-                                                </Tooltip>
-                                                <Tooltip content="Logout">
-                                                    <IconButton className="mdc-theme--secondary" onClick={() => this.doLogout()}
-                                                        icon="exit_to_app" label="Rate this!" />
-                                                </Tooltip>
-                                            </>
-                                            : <Login />
-                                        } */}
 
                                     </TopAppBarSection>
                                 </TopAppBarRow>
@@ -208,7 +216,7 @@ class Home extends Component {
                                     Top sellers
                                 </Typography>
                                 <div style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}></div>
-                                <ProductsGrid />
+                                <TopSellersProductsGrid />
                                 <Typography
                                     use="headline6"
                                     tag="p"

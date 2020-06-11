@@ -21,6 +21,10 @@ class Auth extends Component {
         accessToken: ""
     };
 
+    componentDidMount() {
+        this.checkSession();
+    }
+
     initiateLogin = () => {
         auth.authorize();
     };
@@ -44,22 +48,20 @@ class Auth extends Component {
                 console.log(`Error ${error.error} occured`);
                 return;
             }
-
-            console.log('authResult', authResult);
             localStorage.setItem("token", authResult.idToken)
-
-
             this.setSession(authResult.idTokenPayload);
         });
     };
 
     setSession(data) {
+
         const user = {
             id: data.sub,
             givenName: data.given_name,
             picture: data.picture,
             email: data.email,
-            role: data[AUTH_CONFIG.roleUrl]
+            role: data[AUTH_CONFIG.roleUrl],
+            nonce: data.nonce
         };
         this.setState({
             authenticated: true,
@@ -68,10 +70,37 @@ class Auth extends Component {
         });
 
         localStorage.setItem("user", JSON.stringify(user))
-        console.log('user', user);
-        console.log('data', data);
-
     }
+
+    checkSession = () => {
+
+        auth.validateToken(localStorage.getItem('token'), localStorage.getItem('nonce'), (err, authResult) => {
+            if (err) {
+                console.log('checksessionrsulterr', err);
+                this.setState({
+                    authenticated: false,
+                });
+
+                return;
+            }
+
+            const user = {
+                id: authResult.sub,
+                givenName: authResult.given_name,
+                picture: authResult.picture,
+                email: authResult.email,
+                role: authResult[AUTH_CONFIG.roleUrl],
+                nonce: authResult.nonce
+            };
+
+            localStorage.setItem("user", JSON.stringify(user))
+            this.setState({
+                authenticated: true,
+            });
+        })
+
+
+    };
 
     render() {
         const authProviderValue = {

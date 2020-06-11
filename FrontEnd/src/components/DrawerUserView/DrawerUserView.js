@@ -1,18 +1,32 @@
 import React from "react";
 import { AuthConsumer } from "../../contexts/authContext";
 
-import { Button } from '@rmwc/button';
 import { Avatar } from '@rmwc/avatar';
 import { DrawerTitle, DrawerSubtitle } from '@rmwc/drawer';
 
-import '@rmwc/button/styles';
 import '@rmwc/avatar/styles';
 import '@rmwc/drawer/styles';
 
 
+var user = localStorage.getItem('user');
+if (user) {
+    user = JSON.parse(user);
+} else {
+    user = {
+        id: 0,
+        givenName: null,
+        picture: null,
+        email: null,
+        role: null,
+        nonce: null
+    };
+}
+
 const DrawerUserView = () => (
+
     <AuthConsumer>
-        {(user) => (
+        {() => (
+
             <>
                 <Avatar
                     src={user.picture}
@@ -21,7 +35,6 @@ const DrawerUserView = () => (
                     name={user.givenName}
                     interactive
                 />
-                {console.log('user', user)}
                 <div>
                     <DrawerTitle>Hello, {user.givenName} </DrawerTitle>
                     <DrawerSubtitle>Enjoy this app! <span>😃</span></DrawerSubtitle>
