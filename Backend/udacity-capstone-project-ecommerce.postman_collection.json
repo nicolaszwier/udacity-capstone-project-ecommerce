@@ -1,0 +1,1150 @@
+{
+	"info": {
+		"_postman_id": "a216e1d1-1d74-4702-ac83-82a1a278f5b4",
+		"name": "udacity-capstone-project-ecommerce",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "public",
+			"item": [
+				{
+					"name": "GET: /products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "368496f4-d8ac-49b1-9e81-09c54a7a0c48",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "GET: /products/{product_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2d67d7b1-89b8-4ef2-8800-08c367631097",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET: /categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "33276b20-7678-4f53-8288-b26d054bb0b1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains categories array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.categories).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/categories",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "DELETE: /remove-from-cart/{cart_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d8be52e-3375-4ce3-b625-59ee039a887f",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/remove-from-cart/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"remove-from-cart",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST: /add-to-cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "45e8d901-fa80-4859-bf3a-5ee512ba7fc8",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": 1,\n    \"product_id\": 1,\n    \"amount\": 1,\n    \"product_price\": 10\n}"
+						},
+						"url": {
+							"raw": "{{host}}/add-to-cart",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"add-to-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET: /categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "75ffe163-996a-42f6-87ec-e332c63e6c6c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "GET: /products/{product_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2163d762-7e3a-4475-b950-43a80b4b769d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET: /products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f2c63a1f-ddf6-4779-bc0d-647ba7a4d45a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "GET: /cart/{customer_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d823a9ca-ef49-4814-8202-d57309d564b7",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});",
+									"",
+									"pm.test(\"value contains totals array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{customer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/cart/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"cart",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "manager",
+			"item": [
+				{
+					"name": "GET: /cart/{customer_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "49fdfb6f-34ed-4220-b0ee-94b0ada4a58d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});",
+									"",
+									"pm.test(\"value contains totals array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/cart/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"cart",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH: /product/{product_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "811c26de-c0ef-4f30-baff-2efbf1a854e1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\": \"123ABC\",\n    \"name\": \"Apple MacBook Air 13.3\",\n    \"category_id\": 6,\n    \"short_description\": \"Apple MacBook Air 13.3 (256GB SSD, Intel Core i3 10th Gen., 3.20 GHz, 8GB)\",\n    \"long_description\": \"Apple MacBook Air 13.3 (256GB SSD, Intel Core i3 10th Gen., 3.20 GHz, 8GB) Laptop - Gold\",\n    \"price\": 2500,\n    \"tags\":[\n    \t\"electronic\",\n    \t\"computers\",\n    \t\"apple\"\n    ],\n    \"image_link\": \"https://i.ebayimg.com/thumbs/images/g/5m4AAOSw6Spe2sgR/s-l225.webp\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/product/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH: /product_inactivate/{product_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "375342cf-2782-4e13-9efd-3e84d9aa000e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/product-inactivate/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product-inactivate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST: /product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b997b4d-69f0-443c-8063-28bf1af28116",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\": \"asd534\",\n    \"name\": \"DualShock 4 Wireless Controller for PlayStation 4 - Berry Blue\",\n    \"category_id\": 3,\n    \"short_description\": \"Bright, playful, and fun, the new Berry Blue Edition brings new flavor to the dualshock 4 wireless Controller line\",\n    \"long_description\": \"Precision control - the enhanced feel, shape, and sensitivity of the dualshock 4 wireless Controller offers players absolute control over all games on the PlayStation 4 system. Wireless connectivity : bluetooth 2.1+EDR. Sharing at your fingertips - the addition of the share button makes sharing your greatest gaming moments as Easy as a press of a button. New ways to play - revolutionary features like the touch pad, integrated light bar, and built in speaker offer exciting new ways to experience and interact with your games. Charge efficiently - the dualshock 4 wireless Controller can be easily recharged by plugging it into your PlayStation 4 system, even when in rest mode, or with any standard charger using a USB cable\",\n    \"price\": 84.99,\n    \"tags\":[\n    \t\"games\",\n    \t\"ps4\",\n    \t\"playstation\"\n    ],\n    \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/71GZ3NV3ZlL._SL1500_.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/product",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST: /add-to-cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c415e384-5af2-4375-9654-149d5d462028",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": 1,\n    \"product_id\": 1,\n    \"amount\": 1,\n    \"product_price\": 10\n}"
+						},
+						"url": {
+							"raw": "{{host}}/add-to-cart",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"add-to-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE: /remove-from-cart/{cart_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6322e699-1182-4cdf-9779-3cc9761cf61c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/remove-from-cart/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"remove-from-cart",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET: /categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b98f81a1-546a-49ca-81e7-b8ebe0a90562",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "GET: /products/{product_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d91d43ea-a367-4dea-9a94-ee871bf8111b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET: /products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "747c8f80-cb6d-49e8-b0fa-89786e2f1d93",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"value contains products array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.products).to.be.an('array')",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET: /products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/products",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "490"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type,Authorization,true"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,OPTIONS"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.15.2 Python/3.7.7"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 23 May 2020 14:54:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"products\": [\n        {\n            \"active\": \"Y\",\n            \"id\": 1,\n            \"image_link\": \"https://images-na.ssl-images-amazon.com/images/I/716iAMmkTUL._AC_SX679_.jpg\",\n            \"long_description\": \"This is a fantastic product. The quality is amazing and will make you so happy!\",\n            \"name\": \"Product 1\",\n            \"price\": 20,\n            \"reference\": \"ASDQ12351S1#\",\n            \"short_description\": \"This is a fantastic product\",\n            \"tags\": null\n        }\n    ],\n    \"success\": true,\n    \"total_products\": 1\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "8de8766c-f06e-459a-a1b0-bc875f7cf81e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f9ee6075-3084-4ffb-8d1e-9d6323d1efa0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "635e35c4-ce18-4b9b-bd73-b37d43fa62bc",
+			"key": "host",
+			"value": "localhost:5000",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "ab840fc0-8d4e-4174-8707-16c50e1b92d3",
+			"key": "host",
+			"value": "localhost:5000",
+			"type": "string"
+		},
+		{
+			"id": "6913ea15-350b-4c32-b6ba-206d4119ce35",
+			"key": "manager_token",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJyMURJOHhhYVB5Zk1DaWRlYzJLRiJ9.eyJodHRwczovL25pY29sYXMuY29tL3JvbGUiOlsiZ2V0OnByb2R1Y3RzIiwicG9zdDpwcm9kdWN0cyIsInBhdGNoOnByb2R1Y3QiLCJwYXRjaDpwcm9kdWN0LWluYWN0aXZhdGUiLCJnZXQ6Y2FydCIsInBvc3Q6Y2FydCIsImRlbGV0ZTpjYXJ0Il0sImdpdmVuX25hbWUiOiJOaWNvbGFzIiwiZmFtaWx5X25hbWUiOiJad2llcnp5a293c2tpIiwibmlja25hbWUiOiJuaWNvbGFzendpZXIiLCJuYW1lIjoiTmljb2xhcyBad2llcnp5a293c2tpIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdoVGh6aTB5dDEyUUxIZ1RhQWo3Q1BmdUdlZFlCNEVrZDUwM2JLVk9RIiwibG9jYWxlIjoicHQtQlIiLCJ1cGRhdGVkX2F0IjoiMjAyMC0wNi0xMVQyMDowNjo1Ny4xMzNaIiwiZW1haWwiOiJuaWNvbGFzendpZXJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImlzcyI6Imh0dHBzOi8vbmljb2xhc2Rldi5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTgwODczMDMwMjY4NTkwMDc0MjkiLCJhdWQiOiJwS1RHSHNJcWN6S0J1Rmt1a25XYzZMa1Z5ZmFPRzBobSIsImlhdCI6MTU5MTkwNzM5MSwiZXhwIjoxNTkxOTQzMzkxLCJhdF9oYXNoIjoiZHp3LVVGT3JGRFE3cWtpd1kzb09FZyIsIm5vbmNlIjoidXB4cWwxdXNlekFmeFRzZlFBcFo4cU9OSHNRcE43Ty0ifQ.AIr77DL3nziRESwq3l3GHTJOXjTW65Ck7Yu9pA9v2L3kwxuXwGX01hNf3hMXCd5PV7N672Zao8zVVqSRftlOtY5QUM2AhUehpEZcm9QXrNSr_mHPRpNwNAiklkJMXgiAeioZt12o0-VqUKW8aOZXE4idOwm9LsipKpJC8wMYa2jA80w243WqsBYlEpi-PjoGsVA0D3SgNygyHuMufNhlbAdv7eL8WDvTJqd-y97xB9MieiRy5lr767ztWTdXgPE719jYuS-Yxq8n0byZcCcC0KsSdfvg3nBNvgH7nvC-gl0nzl3M1EERCkTfYEbWWCe_BAH0TwkZousf0aJwuMcOGg",
+			"type": "string"
+		},
+		{
+			"id": "23bf9021-3ba9-4db9-9d0d-5d987d6717b0",
+			"key": "customer_token",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJyMURJOHhhYVB5Zk1DaWRlYzJLRiJ9.eyJodHRwczovL25pY29sYXMuY29tL3JvbGUiOlsicG9zdDpjYXJ0IiwiZGVsZXRlOmNhcnQiLCJnZXQ6Y2FydCJdLCJuaWNrbmFtZSI6Im5pY29sYXMiLCJuYW1lIjoibmljb2xhc0BlbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvYTUyMTlkY2E4NWQxZjc3YTA1Nzc3NzAzOTdjNWMzMTg_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZuaS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyMC0wNi0xMVQyMDo0ODo1OC44MjJaIiwiZW1haWwiOiJuaWNvbGFzQGVtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiaXNzIjoiaHR0cHM6Ly9uaWNvbGFzZGV2LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZWUxNmEzMDdlMDMzNzAwMTRhMmViNmEiLCJhdWQiOiJwS1RHSHNJcWN6S0J1Rmt1a25XYzZMa1Z5ZmFPRzBobSIsImlhdCI6MTU5MTkxMDMxNSwiZXhwIjoxNTkxOTQ2MzE1LCJhdF9oYXNoIjoicmNHNVRLN0dmcVVBUmxjR2lTSDlVZyIsIm5vbmNlIjoidjVoTzRrUDB3bHQ1MS1qNWVVVTZUTnFJUy5TNjhINW8ifQ.d1guro29O896NVEIW66ws4bVSe64K3lL_MaYydce9Li6BkVw1-N4AA4x5Atd4j1vXOq-b0tkWe1awWvi2mjfDo7S5CG-04tk5cmK0DYX6Wa4GWy_k3pj57Hfr_fO0dreZn60qGm5mpGlC7NnBC4jS-i0Z7T5GVVQeFRc3Y_dCbXQuiYLoCi-izYIyXyYGj1FWIXgXb5Qsu5G2-XF6bVCohowWySbROYPvdBjcAbLZdJefLMi13FMd4mgXb8sbHJVZjgk6uM2NDb1asM5G5NTI92whnfWqxiAe5FZISJaQCgLwPSN0HDDkP9383-1kotkxhhe9hrsYtHWuDqM2q6Kcg",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
