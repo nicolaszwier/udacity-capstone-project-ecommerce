@@ -74,6 +74,19 @@ The API will return these error types when requests fail:
 - 422: Unprocessable
 
 
+## Authentication
+
+The authentication system used for this project is Auth0. The instructions to authenticate are in front end readme.
+
+## Authorization
+
+The Auth0 JWT includes claims for permissions based on the user's role within the Auth0 system. When you sign in the app, you receive only customers permissions, so you can't perform actions like create new products or delete them.
+
+The customers permissions are: 'get:cart', 'post:cart', 'delete:cart';
+
+The manager permissions are: 'get:cart', 'post:cart', 'delete:cart', 'post:product', 'patch:product', 'patch:product-inactivate';
+
+
 ## Endpoints
 
 ## GET '/status'
@@ -193,6 +206,7 @@ The API will return these error types when requests fail:
 ```
 
 ## POST '/product'
+- Authorization: requires the 'post:products' permission.
 - General:
   - Creates a new product, if success, returns success value and new question id.
   - Sample: `http://127.0.0.1:5000/product`
@@ -225,6 +239,7 @@ The API will return these error types when requests fail:
   
   
 ## PATCH '/product/{product_id}'
+- Authorization: requires the 'patch:product' permission.
 - General:
   - Update a product with the given id, if success, returns success value and new product updated.
   - Sample: `http://127.0.0.1:5000/product/1`
@@ -255,7 +270,7 @@ The API will return these error types when requests fail:
   ```
 
 ## PATCH '/product-inactivate/{product_id}'
-
+- Authorization: requires the 'patch:product-inactivate' permission.
 - General:
   - Inactivate the product with the given id
   - Returns: A object that contains success value and id of the inactive product
@@ -271,6 +286,7 @@ The API will return these error types when requests fail:
   ```
 
 ## GET '/cart/{customer_id}'
+- Authorization: requires the 'get:cart' permission.
 - General:
   - Returns a list of the cart products, the totals, success value and total numbem of products.
   - Sample: `http://127.0.0.1:5000/cart/1` 
@@ -301,6 +317,7 @@ The API will return these error types when requests fail:
 
 
 ## POST '/add-to-cart'
+- Authorization: requires the 'post:cart' permission.
 - General:
   - Add a new product to customer cart, if success, returns success value and new cart id.
   - Sample: `http://127.0.0.1:5000/add-to-cart`
@@ -323,7 +340,7 @@ The API will return these error types when requests fail:
   ```
   
 ## DELETE '/remove-from-cart/{cart_id}'
-
+- Authorization: requires the 'delete:cart' permission.
 - General:
   - Delete a product from the cart with the given id
   - Returns: A object that contains success value and id of the deleted cart
