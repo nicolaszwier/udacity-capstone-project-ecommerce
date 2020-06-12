@@ -92,26 +92,42 @@ class EcommerceTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Not found')
 
     def test_new_product(self):
-        res = self.client().post('/product', headers=self.header, json=self.new_product)
+        res = self.client().post(
+            '/product',
+            headers=self.header,
+            json=self.new_product
+        )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
     def test_new_product_with_bad_data(self):
-        res = self.client().post('/product', headers=self.header, json=self.new_bad_product)
+        res = self.client().post(
+            '/product',
+            headers=self.header,
+            json=self.new_bad_product
+        )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertIn('422 Unprocessable Entity:', data['message'])
 
     def test_add_to_cart(self):
-        res = self.client().post('/add-to-cart', headers=self.header, json=self.new_cart)
+        res = self.client().post(
+            '/add-to-cart',
+            headers=self.header,
+            json=self.new_cart
+        )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
     def test_add_to_cart_with_bad_data(self):
-        res = self.client().post('/add-to-cart', headers=self.header, json=self.new_bad_cart)
+        res = self.client().post(
+            '/add-to-cart',
+            headers=self.header,
+            json=self.new_bad_cart
+        )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)

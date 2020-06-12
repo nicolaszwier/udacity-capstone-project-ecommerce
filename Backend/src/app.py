@@ -6,8 +6,9 @@ from flask_cors import CORS
 import logging
 from models import db, setup_db, Product, Category, Cart
 from decimal import Decimal
-from validator import validate_required_fields_in_new_product, validate_required_fields_in_new_cart
-# from models import db, setup_db
+from validator import validate_required_fields_in_new_cart
+from validator import validate_required_fields_in_new_product
+from models import db, setup_db
 from auth.auth import AuthError, requires_auth
 
 
@@ -17,6 +18,7 @@ def create_app(test_config=None):
     CORS(app)
 
     logging.basicConfig(level=logging.DEBUG)
+
     @app.after_request
     def after_request(response):
         # response.headers.add('Access-Control-Allow-Origin', '*')
@@ -93,7 +95,9 @@ def create_app(test_config=None):
         return jsonify({
             'success': True,
             'products': current_products,
-            'total_products': len(Product.query.filter(Product.active == 'Y').all())
+            'total_products': len(
+                Product.query.filter(Product.active == 'Y').all()
+            )
         })
 
     @app.route('/products/<int:product_id>')
@@ -189,7 +193,7 @@ def create_app(test_config=None):
                 'updated': product.id,
             })
 
-        except:
+        except ValueError:
             db.session.rollback()
             logging.exception("message")
             abort(422)
@@ -321,9 +325,7 @@ def create_app(test_config=None):
             logging.exception("message")
             abort(422)
 
-    '''
-       Error handlers 
-    '''
+    #    Error handlers
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
