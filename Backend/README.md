@@ -357,10 +357,27 @@ The manager permissions are: 'get:cart', 'post:cart', 'delete:cart', 'post:produ
 
 
 ## Testing
-To run the tests, run
+To run the tests:
+
 ```
 dropdb ecommerce_test
 createdb ecommerce_test
-psql ecommerce_test < ecommerce_test.psql
+```
+
+In the models.py, change the value of the database_path variable to the path of your new created database.
+
+Then run:
+
+```
+python manage.py db upgrade
+```
+
+
+And then, run the tests:
+
+```
 python tests.py
 ```
+
+
+After upgrade your test database, you can change again the variable database_path to the old database.
