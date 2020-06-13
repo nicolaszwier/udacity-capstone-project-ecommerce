@@ -66,7 +66,18 @@ class Product(db.Model):
     cart = db.relationship('Cart', backref='product', lazy=True)
     image_link = db.Column(db.String)
 
-    def __init__(self, reference, name, category_id, short_description, long_description, price, tags, active, image_link):
+    def __init__(
+        self,
+        reference,
+        name,
+        category_id,
+        short_description,
+        long_description,
+        price,
+        tags,
+        active,
+        image_link
+    ):
         self.reference = reference
         self.name = name
         self.category_id = category_id
