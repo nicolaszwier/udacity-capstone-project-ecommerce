@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 
 AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
-ALGORITHMS = ['RS256']
+ALGORITHMS = os.environ['ALGORITHMS']
 API_AUDIENCE = os.environ['API_AUDIENCE']
 
 
@@ -77,7 +77,7 @@ def verify_decode_jwt(token):
         except jwt.ExpiredSignatureError:
             abort(401, 'Token expired.')
         except jwt.JWTClaimsError:
-            abort(401, 'Incorrect claims. Please, check the audience and issuer.')
+            abort(401, 'Incorrect claims. Check the audience and issuer.')
         except ValueError:
             abort(401, 'Unable to parse authentication token.')
     raise
