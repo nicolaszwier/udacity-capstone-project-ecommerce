@@ -20,7 +20,7 @@
     "@rmwc/top-app-bar": "^6.0.14",
     "@rmwc/typography": "^6.0.14",
     "auth0-js": "^9.13.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "corsproxy": "^1.5.0",
     "jwt-decode": "^2.2.0",
     "react": "^16.13.1",
